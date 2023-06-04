@@ -7,6 +7,8 @@ using System.Linq;
 using System;
 using UnityEngine;
 using static UnityEditor.Experimental.GraphView.GraphView;
+using Assets.Scripts.IsometricRenders.Models;
+using System.IO;
 //using ArcanumIsland.
 
 public class VoxelMapRender : MonoBehaviour
@@ -23,9 +25,15 @@ public class VoxelMapRender : MonoBehaviour
     public float step = 1f;
     public float heightScale = 0.5f;
 
+    [SerializeField] private GameObject Render;
+    private IsometricRenderController _renderController;
+    private IsometricRenderConfig _config = new IsometricRenderConfig { };
+
     // Start is called before the first frame update
     void Start()
     {
+        _renderController = Render.GetComponent<IsometricRenderController>();
+
         //var seaLevel = 0.7f;
         //var sea = Instantiate(SeaVoxelPrefab);
 
@@ -54,9 +62,33 @@ public class VoxelMapRender : MonoBehaviour
                 ProcessCell(cell);
             }
         }
+
+        _config.ObjectWidth = model.Width;
+        _config.ObjectHeight = model.Height;
+
+        _config.CameraHeight = 20;
+
+        _config.TilesPerRow = 10;
+
+        _config.Center = new Vector3(
+                model.Width / 2,
+                0,
+                model.Height / 2
+            );
+
+        string savePath = "Screenshots/";
+        string fileName = "screenshot_" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".png";
+        string filePath = Path.Combine(savePath, fileName);
+
+        _config.FilePath = filePath;
+
+        var pixelPerUnit = 10;
+
+        _config.ResultImageWidth = model.Width * pixelPerUnit;
+        _config.ResultImageHeight = model.Height * pixelPerUnit;
     }
 
-    private void ProcessCell(CellStoreModel cell) 
+    private void ProcessCell(CellStoreModel cell)
     {
         //var altitude = cell.CellLayers.First(a => a.Name == nameof(Altitude)).GetAsCellLayer() as Altitude;
         var altitude = cell.GetLayer<Altitude>();
@@ -72,7 +104,7 @@ public class VoxelMapRender : MonoBehaviour
         var grass = cell.GetLayer<Grass>();
         var snow = cell.GetLayer<Snow>();
 
-        if (sand != null) 
+        if (sand != null)
         {
             CreateVoxel(SendVoxelPrefab, GetXZ(cell.X), GetY(altitude.Value), GetXZ(cell.Y));
         }
@@ -100,7 +132,7 @@ public class VoxelMapRender : MonoBehaviour
         //green.transform.localScale *= 3;
     }
 
-    private void CreateVoxel(GameObject voxelPrefab, float x, float y, float z) 
+    private void CreateVoxel(GameObject voxelPrefab, float x, float y, float z)
     {
         var voxel = Instantiate(voxelPrefab);
 
@@ -120,7 +152,7 @@ public class VoxelMapRender : MonoBehaviour
         voxelTransform.SetParent(worldTransform);
     }
 
-    private float GetY(double value) 
+    private float GetY(double value)
     {
         return (float)Math.Round((double)value * heightScale, 2);
     }
@@ -133,6 +165,14 @@ public class VoxelMapRender : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
+    }
+
+    void LateUpdate()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            _renderController.RenderToFile(_config);
+        }
     }
 }

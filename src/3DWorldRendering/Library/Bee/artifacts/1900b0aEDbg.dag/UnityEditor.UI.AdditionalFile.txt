@@ -1,1 +1,1 @@
-C:\Users\alexk\OneDrive\Документы\Unity3d\3DWorldRendering
+C:\Users\alexk\OneDrive\Документы\GitHub\3DWorldRendering\src\3DWorldRendering
