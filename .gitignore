@@ -107,7 +107,3 @@ crashlytics-build.properties
 /*.pidb.meta
 /ProjectSettings/ProjectSettings.asset
 
-/Library/PackageCache
-
-
-
