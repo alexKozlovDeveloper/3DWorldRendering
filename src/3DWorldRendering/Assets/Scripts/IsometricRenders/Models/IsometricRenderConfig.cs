@@ -9,7 +9,7 @@ namespace Assets.Scripts.IsometricRenders.Models
 {
     public class IsometricRenderConfig
     {
-        public Vector3 Center { get; set; }
+        public Vector3 BasePorint { get; set; }
 
         public int CameraHeight { get; set; }
 

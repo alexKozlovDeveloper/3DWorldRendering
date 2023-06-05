@@ -50,7 +50,7 @@ public class VoxelMapRender : MonoBehaviour
 
         //
 
-        var model = ModelStoringExtensions.DeserializeModelFromXml<MapStoreModel>(@"D:\ArcanumIsland\Models\test_xml_map.xml");
+        var model = ModelStoringExtensions.DeserializeModelFromXml<MapStoreModel>(@"D:\ArcanumIsland\Models\for_test_xml_map.xml");
 
 
         for (int x = 0; x < model.Width; x++)
@@ -70,11 +70,7 @@ public class VoxelMapRender : MonoBehaviour
 
         _config.TilesPerRow = 10;
 
-        _config.Center = new Vector3(
-                model.Width / 2,
-                0,
-                model.Height / 2
-            );
+        _config.BasePorint = new Vector3(0, 0, 0);
 
         string savePath = "Screenshots/";
         string fileName = "screenshot_" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".png";
@@ -82,7 +78,7 @@ public class VoxelMapRender : MonoBehaviour
 
         _config.FilePath = filePath;
 
-        var pixelPerUnit = 10;
+        var pixelPerUnit = 100;
 
         _config.ResultImageWidth = model.Width * pixelPerUnit;
         _config.ResultImageHeight = model.Height * pixelPerUnit;
